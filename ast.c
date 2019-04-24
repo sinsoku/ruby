@@ -735,6 +735,16 @@ rb_ast_node_last_column(VALUE self)
     return INT2NUM(nd_last_column(data->node));
 }
 
+static VALUE
+rb_ast_node_id(VALUE self)
+{
+    struct ASTNodeData *data;
+    TypedData_Get_Struct(self, struct ASTNodeData, &rb_node_type, data);
+
+    return INT2NUM(nd_node_id(data->node));
+}
+
+
 /*
  *  call-seq:
  *     node.inspect -> string
@@ -753,10 +763,11 @@ rb_ast_node_inspect(VALUE self)
     str = rb_str_new2("#<");
 
     rb_str_append(str, cname);
-    rb_str_catf(str, ":%s@%d:%d-%d:%d>",
+    rb_str_catf(str, ":%s@%d:%d-%d:%d,node_id = %d>",
                 node_type_to_str(data->node),
                 nd_first_lineno(data->node), nd_first_column(data->node),
-                nd_last_lineno(data->node), nd_last_column(data->node));
+                nd_last_lineno(data->node), nd_last_column(data->node),
+                nd_node_id(data->node));
 
     return str;
 }
@@ -787,4 +798,5 @@ Init_ast(void)
     rb_define_method(rb_cNode, "last_column", rb_ast_node_last_column, 0);
     rb_define_method(rb_cNode, "children", rb_ast_node_children, 0);
     rb_define_method(rb_cNode, "inspect", rb_ast_node_inspect, 0);
+    rb_define_method(rb_cNode, "id", rb_ast_node_id, 0);
 }

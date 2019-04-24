@@ -1398,6 +1398,13 @@ iseqw_path(VALUE self)
     return rb_iseq_path(iseqw_check(self));
 }
 
+static VALUE
+iseqw_node_id(VALUE self)
+{
+    const rb_iseq_t *iseq = iseqw_check(self);
+    return INT2NUM(iseq->body->location.node_id);
+}
+
 /*
  *  Returns the absolute path of this instruction sequence.
  *
@@ -3497,6 +3504,7 @@ Init_ISeq(void)
     rb_define_method(rb_cISeq, "first_lineno", iseqw_first_lineno, 0);
     rb_define_method(rb_cISeq, "trace_points", iseqw_trace_points, 0);
     rb_define_method(rb_cISeq, "each_child", iseqw_each_child, 0);
+    rb_define_method(rb_cISeq, "node_id", iseqw_node_id, 0);
 
 #if 0 /* TBD */
     rb_define_private_method(rb_cISeq, "marshal_dump", iseqw_marshal_dump, 0);
